@@ -17,20 +17,6 @@
                     <input type="text" id="search" placeholder="Search...">
                 </div>
                 <div class="character-list" id="character-list">
-                    <button class="character">
-                        <img src="https://rickandmortyapi.com/api/character/avatar/1.jpeg" alt="Rick Sanchez">
-                        <div>
-                            <strong>Rick Sanchez</strong>
-                            <span>Human</span>
-                        </div>
-                    </button>
-                    <button class="character">
-                    <img src="https://rickandmortyapi.com/api/character/avatar/2.jpeg" alt="Morty Smith">
-                        <div>
-                            <strong>Morty Smith</strong>
-                            <span>Human</span>
-                        </div>
-                    </button>
                 </div>
             </aside>
             <main class="content">
@@ -39,24 +25,23 @@
                         <span class="document-label">Electronic File</span>
                         <h2>Personnel File</h2>
                     </div>
-                    <span class="file-number">
-                        FILE #0234D
+                    <span class="file-number" id="file-number">
+                        FILE #0000
                     </span>
                 </header>
                 <section class="file">
                     <div class="profile">
                         <img
                         id="character-image"
-                        src="https://rickandmortyapi.com/api/character/avatar/1.jpeg"
-                        alt="Charakterbild"
+                        alt="Character Image"
                     >
 
                     <div class="profile-info">
                         <span class="label">NAME</span>
-                        <h3 id="character-name">Rick Sanchez</h3>
+                        <h3 id="character-name">-</h3>
 
                         <span class="status alive" id="character-status">
-                            ● Alive
+                            ● Unknown
                         </span>
                     </div>
 
@@ -66,42 +51,33 @@
                 <!-- Stammdaten -->
                 <div class="section">
 
-                    <h4>Stammdaten</h4>
+                    <h4>Master Data</h4>
 
                     <div class="data-grid">
 
                         <div class="data-item">
-                            <span class="label">Spezies</span>
-                            <strong id="character-species">
-                                Human
-                            </strong>
+                            <span class="label">Species</span>
+                            <strong id="character-species">-</strong>
                         </div>
 
                         <div class="data-item">
-                            <span class="label">Geschlecht</span>
-                            <strong id="character-gender">
-                                Male
-                            </strong>
+                            <span class="label">Sex</span>
+                            <strong id="character-gender">-</strong>
                         </div>
 
                         <div class="data-item">
-                            <span class="label">Herkunft</span>
-                            <strong id="character-origin">
-                                Earth (C-137)
-                            </strong>
+                            <span class="label">Origin</span>
+                            <strong id="character-origin">-</strong>
                         </div>
 
                         <div class="data-item">
-                            <span class="label">Aktueller Standort</span>
-                            <strong id="character-location">
-                                Citadel of Ricks
-                            </strong>
+                            <span class="label">Last Seen</span>
+                            <strong id="character-location">-</strong>
                         </div>
 
                     </div>
 
                 </div>
-                    </div>
                 </section>
             </main>
         </div>
