@@ -1,0 +1,358 @@
+/* =========================
+   Grundlegendes
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #eef1f5;
+    color: #1f2937;
+}
+
+
+/* =========================
+   Hauptlayout
+========================= */
+
+.app {
+    display: flex;
+    height: 100vh;
+}
+
+
+/* =========================
+   Linke Sidebar
+========================= */
+
+.sidebar {
+    width: 350px;
+    background-color: #17202a;
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    padding: 30px 25px;
+    border-bottom: 1px solid #34495e;
+}
+
+.sidebar-header h1 {
+    font-size: 26px;
+    margin-bottom: 5px;
+}
+
+.sidebar-header p {
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+
+/* =========================
+   Suche
+========================= */
+
+.search-container {
+    padding: 20px;
+}
+
+.search-container input {
+    width: 100%;
+
+    padding: 12px 15px;
+
+    border: none;
+    border-radius: 6px;
+
+    background-color: #273746;
+    color: white;
+
+    outline: none;
+}
+
+.search-container input::placeholder {
+    color: #9ca3af;
+}
+
+.search-container input:focus {
+    border: 1px solid #42b883;
+}
+
+
+/* =========================
+   Charakterliste
+========================= */
+
+.character-list {
+    overflow-y: auto;
+    flex: 1;
+}
+
+.character {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 12px 20px;
+
+    border: none;
+    border-bottom: 1px solid #273746;
+
+    background-color: transparent;
+    color: white;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition: background-color 0.2s;
+}
+
+.character:hover {
+    background-color: #273746;
+}
+
+.character img {
+    width: 50px;
+    height: 50px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+}
+
+.character div {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.character strong {
+    font-size: 15px;
+}
+
+.character span {
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+
+/* =========================
+   Rechte Seite
+========================= */
+
+.content {
+    flex: 1;
+
+    padding: 40px;
+
+    overflow-y: auto;
+}
+
+
+/* =========================
+   Kopf der Akte
+========================= */
+
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    margin-bottom: 30px;
+}
+
+.document-label {
+    color: #6b7280;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.content-header h2 {
+    margin-top: 5px;
+    font-size: 32px;
+}
+
+.file-number {
+    padding: 8px 12px;
+
+    background-color: #dbe2e8;
+
+    border-radius: 5px;
+
+    font-size: 12px;
+    font-weight: bold;
+    color: #4b5563;
+}
+
+
+/* =========================
+   Akte
+========================= */
+
+.akte {
+    max-width: 1000px;
+
+    background-color: white;
+
+    border: 1px solid #d9dee5;
+    border-radius: 8px;
+
+    padding: 35px;
+
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+
+/* =========================
+   Profil
+========================= */
+
+.profile {
+    display: flex;
+    align-items: center;
+
+    gap: 25px;
+
+    padding-bottom: 30px;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.profile img {
+    width: 140px;
+    height: 140px;
+
+    object-fit: cover;
+
+    border-radius: 8px;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.label {
+    font-size: 11px;
+    font-weight: bold;
+
+    color: #6b7280;
+
+    letter-spacing: 1px;
+}
+
+.profile-info h3 {
+    font-size: 30px;
+}
+
+
+/* =========================
+   Status
+========================= */
+
+.status {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.alive {
+    color: #16a34a;
+}
+
+.dead {
+    color: #dc2626;
+}
+
+
+/* =========================
+   Sektionen
+========================= */
+
+.section {
+    padding: 30px 0;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.section:last-child {
+    border-bottom: none;
+}
+
+.section h4 {
+    margin-bottom: 20px;
+
+    font-size: 16px;
+    color: #374151;
+}
+
+
+/* =========================
+   Daten
+========================= */
+
+.data-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 20px;
+}
+
+.data-item {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+
+    padding: 15px;
+
+    background-color: #f8fafc;
+
+    border-radius: 5px;
+}
+
+.data-item strong {
+    font-size: 15px;
+    color: #111827;
+}
+
+
+/* =========================
+   Responsive Design
+========================= */
+
+@media (max-width: 800px) {
+
+    .app {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: 400px;
+    }
+
+    .content {
+        padding: 20px;
+    }
+
+    .data-grid {
+        grid-template-columns: 1fr;
+    }
+
+}

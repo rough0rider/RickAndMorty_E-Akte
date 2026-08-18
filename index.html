@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/style.css">
+        <title>R&M E-Files</title>
+    </head>
+    <body>
+        <div class="app">
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <h1>E-File</h1>
+                    <p>Rick & Morty Database</p>
+                </div>
+                <div class="search-container">
+                    <input type="text" id="search" placeholder="Search...">
+                </div>
+                <div class="character-list" id="character-list">
+                    <button class="character">
+                        <img src="https://rickandmortyapi.com/api/character/avatar/1.jpeg" alt="Rick Sanchez">
+                        <div>
+                            <strong>Rick Sanchez</strong>
+                            <span>Human</span>
+                        </div>
+                    </button>
+                    <button class="character">
+                    <img src="https://rickandmortyapi.com/api/character/avatar/2.jpeg" alt="Morty Smith">
+                        <div>
+                            <strong>Morty Smith</strong>
+                            <span>Human</span>
+                        </div>
+                    </button>
+                </div>
+            </aside>
+            <main class="content">
+                <header class="content-header">
+                    <div>
+                        <span class="document-label">Electronic File</span>
+                        <h2>Personnel File</h2>
+                    </div>
+                    <span class="file-number">
+                        FILE #0234D
+                    </span>
+                </header>
+                <section class="file">
+                    <div class="profile">
+                        <img
+                        id="character-image"
+                        src="https://rickandmortyapi.com/api/character/avatar/1.jpeg"
+                        alt="Charakterbild"
+                    >
+
+                    <div class="profile-info">
+                        <span class="label">NAME</span>
+                        <h3 id="character-name">Rick Sanchez</h3>
+
+                        <span class="status alive" id="character-status">
+                            ● Alive
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <!-- Stammdaten -->
+                <div class="section">
+
+                    <h4>Stammdaten</h4>
+
+                    <div class="data-grid">
+
+                        <div class="data-item">
+                            <span class="label">Spezies</span>
+                            <strong id="character-species">
+                                Human
+                            </strong>
+                        </div>
+
+                        <div class="data-item">
+                            <span class="label">Geschlecht</span>
+                            <strong id="character-gender">
+                                Male
+                            </strong>
+                        </div>
+
+                        <div class="data-item">
+                            <span class="label">Herkunft</span>
+                            <strong id="character-origin">
+                                Earth (C-137)
+                            </strong>
+                        </div>
+
+                        <div class="data-item">
+                            <span class="label">Aktueller Standort</span>
+                            <strong id="character-location">
+                                Citadel of Ricks
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+        <script src="js/api.js"></script>
+        <script src="js/app.js"></script>
+    </body>
+</html>
