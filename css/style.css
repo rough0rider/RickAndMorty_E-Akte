@@ -356,3 +356,132 @@ body {
     }
 
 }
+
+/* ========================================
+   MOST WANTED BANNER
+======================================== */
+
+.wanted-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+    height: 70px;
+
+    display: flex;
+
+    background-color: #151515;
+
+    border-top: 3px solid #c0392b;
+
+    color: white;
+
+    z-index: 1000;
+}
+
+
+/* Rotes Label links */
+
+.wanted-label {
+    width: 180px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #c0392b;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    letter-spacing: 2px;
+
+    flex-shrink: 0;
+}
+
+
+/* Laufbereich */
+
+.wanted-ticker {
+    flex: 1;
+
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+}
+
+
+/* Inhalt, der läuft */
+
+.wanted-content {
+    display: flex;
+    align-items: center;
+
+    gap: 25px;
+
+    white-space: nowrap;
+
+    animation: wanted-scroll 18s linear infinite;
+}
+
+
+/* Einstein Bild */
+
+.wanted-content img {
+    width: 50px;
+    height: 50px;
+
+    object-fit: cover;
+
+    border-radius: 4px;
+
+    border: 2px solid #c0392b;
+
+    filter: grayscale(100%);
+}
+
+
+/* Name */
+
+.wanted-content strong {
+    color: #ffffff;
+
+    font-size: 18px;
+
+    letter-spacing: 1px;
+}
+
+
+/* Informationen */
+
+.wanted-content span {
+    color: #b8b8b8;
+
+    font-size: 14px;
+}
+
+
+/* Roter Status */
+
+.wanted-content span:nth-of-type(1) {
+    color: #e74c3c;
+
+    font-weight: bold;
+}
+
+
+/* Laufanimation */
+
+@keyframes wanted-scroll {
+
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(-100%);
+    }
+
+}
