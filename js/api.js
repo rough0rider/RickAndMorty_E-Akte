@@ -5,21 +5,27 @@ const API_URL = "https://rickandmortyapi.com/api";
 // Charaktere laden
 // ========================================
 
-async function getCharacters(page = 1) {
+function getCharacters(page = 1) {
 
-    const response = await fetch(
-        `${API_URL}/character?page=${page}`
-    );
+    // $.ajax() liefert ein jqXHR-Objekt zurück,
+    // das sich wie ein Promise verhält und
+    // daher ganz normal mit await abgewartet
+    // werden kann.
 
-    if (!response.ok) {
+    return $.ajax({
 
-        throw new Error(
-            `API Fehler: ${response.status}`
-        );
+        url: `${API_URL}/character`,
 
-    }
+        method: "GET",
 
-    return await response.json();
+        data: {
+            page: page
+        },
+
+        dataType: "json"
+
+    });
+
 }
 
 
@@ -27,35 +33,51 @@ async function getCharacters(page = 1) {
 // Charakter suchen
 // ========================================
 
-async function searchCharacters(name) {
+function searchCharacters(name) {
 
-    const url =
-        `${API_URL}/character/?name=${encodeURIComponent(name)}`;
+    // $.getJSON() ist die Kurzschreibweise für
+    // $.ajax mit method: "GET" und
+    // dataType: "json"
 
-    const response = await fetch(url);
-
-
-    // Bei keiner Übereinstimmung
-    // liefert die API 404
-    if (response.status === 404) {
-
-        return [];
-
-    }
+    const deferred = $.Deferred();
 
 
-    if (!response.ok) {
+    $.getJSON(
 
-        throw new Error(
-            `API Fehler: ${response.status}`
-        );
+        `${API_URL}/character/`,
 
-    }
+        {
+            name: name
+        }
+
+    )
+
+        .done(data => {
+
+            deferred.resolve(data.results);
+
+        })
+
+        .fail(jqXHR => {
+
+            // Bei keiner Übereinstimmung
+            // liefert die API 404
+
+            if (jqXHR.status === 404) {
+
+                deferred.resolve([]);
+
+            } else {
+
+                deferred.reject(jqXHR);
+
+            }
+
+        });
 
 
-    const data = await response.json();
+    return deferred.promise();
 
-    return data.results;
 }
 
 
@@ -63,21 +85,16 @@ async function searchCharacters(name) {
 // Einzelnen Charakter laden
 // ========================================
 
-async function getCharacter(id) {
+function getCharacter(id) {
 
-    const response = await fetch(
-        `${API_URL}/character/${id}`
-    );
+    return $.ajax({
 
+        url: `${API_URL}/character/${id}`,
 
-    if (!response.ok) {
+        method: "GET",
 
-        throw new Error(
-            `API Fehler: ${response.status}`
-        );
+        dataType: "json"
 
-    }
+    });
 
-
-    return await response.json();
 }

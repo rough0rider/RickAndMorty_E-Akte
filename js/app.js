@@ -1,36 +1,39 @@
 // ========================================
-// DOM
+// DOM (jQuery-Selektoren)
 // ========================================
 
-const characterList =
-    document.getElementById("character-list");
+const $characterList =
+    $("#character-list");
 
-const searchInput =
-    document.getElementById("search");
+const $searchInput =
+    $("#search");
 
-const characterImage =
-    document.getElementById("character-image");
+const $characterImage =
+    $("#character-image");
 
-const characterName =
-    document.getElementById("character-name");
+const $characterName =
+    $("#character-name");
 
-const characterStatus =
-    document.getElementById("character-status");
+const $characterStatus =
+    $("#character-status");
 
-const characterSpecies =
-    document.getElementById("character-species");
+const $characterSpecies =
+    $("#character-species");
 
-const characterGender =
-    document.getElementById("character-gender");
+const $characterGender =
+    $("#character-gender");
 
-const characterOrigin =
-    document.getElementById("character-origin");
+const $characterOrigin =
+    $("#character-origin");
 
-const characterLocation =
-    document.getElementById("character-location");
+const $characterLocation =
+    $("#character-location");
 
-const fileNumber =
-    document.getElementById("file-number");
+const $fileNumber =
+    $("#file-number");
+
+const speciesChartCanvas =
+    document.getElementById("species-chart");
 
 
 // ========================================
@@ -39,7 +42,11 @@ const fileNumber =
 
 let characters = [];
 
+let currentList = [];
+
 let searchTimeout;
+
+let speciesChart = null;
 
 
 // ========================================
@@ -95,11 +102,11 @@ async function init() {
 
 function showLoading() {
 
-    characterList.innerHTML = `
+    $characterList.html(`
         <div class="loading">
             Charaktere werden geladen...
         </div>
-    `;
+    `);
 
 }
 
@@ -110,11 +117,11 @@ function showLoading() {
 
 function showError() {
 
-    characterList.innerHTML = `
+    $characterList.html(`
         <div class="error">
             Die Charaktere konnten nicht geladen werden.
         </div>
-    `;
+    `);
 
 }
 
@@ -125,71 +132,102 @@ function showError() {
 
 function renderCharacterList(list) {
 
-    characterList.innerHTML = "";
+    $characterList.empty();
+
+
+    currentList = list;
 
 
     if (list.length === 0) {
 
-        characterList.innerHTML = `
+        $characterList.html(`
             <div class="no-results">
                 Keine Charaktere gefunden.
             </div>
-        `;
+        `);
 
         return;
 
     }
 
 
-    list.forEach(character => {
+    // $.each() statt forEach() - iteriert
+    // genauso über das Array, ist aber die
+    // jQuery-eigene Variante davon
 
-        const button =
-            document.createElement("button");
+    $.each(list, function (index, character) {
 
+        const $button =
+            $("<button>")
+                .addClass("character")
+                .attr("data-id", character.id)
+                .html(`
+                    <img
+                        src="${character.image}"
+                        alt="${character.name}"
+                        loading="lazy"
+                    >
 
-        button.classList.add(
-            "character"
-        );
+                    <div>
+                        <strong>
+                            ${character.name}
+                        </strong>
 
-
-        button.innerHTML = `
-            <img
-                src="${character.image}"
-                alt="${character.name}"
-                loading="lazy"
-            >
-
-            <div>
-                <strong>
-                    ${character.name}
-                </strong>
-
-                <span>
-                    ${character.species}
-                </span>
-            </div>
-        `;
-
-
-        button.addEventListener(
-            "click",
-            () => {
-
-                showCharacter(
-                    character
-                );
-
-            }
-        );
+                        <span>
+                            ${character.species}
+                        </span>
+                    </div>
+                `);
 
 
-        characterList.appendChild(
-            button
-        );
+        $characterList.append($button);
 
     });
 
 }
+
+
+// ========================================
+// Klick auf einen Charakter
+//
+// Event Delegation: der Handler hängt am
+// Container (immer vorhanden), nicht an
+// den einzelnen Buttons. Dadurch
+// funktioniert der Klick auch für
+// Buttons, die erst nach einer Suche neu
+// erzeugt wurden.
+// ========================================
+
+$characterList.on("click", ".character", function () {
+
+    const id =
+        $(this).attr("data-id");
+
+    const character =
+        currentList.find(c => c.id == id);
+
+
+    if (!character) {
+
+        return;
+
+    }
+
+
+    // Traversierung via siblings(): den
+    // geklickten Eintrag markieren und bei
+    // allen Geschwistern die Markierung
+    // entfernen
+
+    $(this)
+        .addClass("active")
+        .siblings()
+        .removeClass("active");
+
+
+    showCharacter(character);
+
+});
 
 
 // ========================================
@@ -198,39 +236,54 @@ function renderCharacterList(list) {
 
 function showCharacter(character) {
 
-    characterImage.src =
-        character.image;
-
-    characterImage.alt =
-        character.name;
+    const $file =
+        $(".file");
 
 
-    characterName.textContent =
-        character.name;
+    // Effekt mit Callback-Methode: erst
+    // ausblenden, DANACH (im Callback) die
+    // Daten setzen und wieder einblenden -
+    // so gibt es keinen kurzen "Flackerer"
+    // mit den alten Daten
+
+    $file.stop(true, true).fadeOut(150, function () {
+
+        $characterImage
+            .attr("src", character.image)
+            .attr("alt", character.name);
 
 
-    characterSpecies.textContent =
-        character.species;
+        $characterName.text(
+            character.name
+        );
+
+        $characterSpecies.text(
+            character.species
+        );
+
+        $characterGender.text(
+            character.gender
+        );
+
+        $characterOrigin.text(
+            character.origin.name
+        );
+
+        $characterLocation.text(
+            character.location.name
+        );
+
+        $fileNumber.text(
+            `FILE #${String(character.id).padStart(4, "0")}`
+        );
 
 
-    characterGender.textContent =
-        character.gender;
+        updateStatus(character.status);
 
 
-    characterOrigin.textContent =
-        character.origin.name;
+        $file.fadeIn(300);
 
-
-    characterLocation.textContent =
-        character.location.name;
-
-    fileNumber.textContent =
-        `FILE #${String(character.id).padStart(4, "0")}`;
-
-
-    updateStatus(
-        character.status
-    );
+    });
 
 }
 
@@ -241,38 +294,32 @@ function showCharacter(character) {
 
 function updateStatus(status) {
 
-    characterStatus.classList.remove(
-        "alive",
-        "dead"
+    $characterStatus.removeClass(
+        "alive dead"
     );
 
 
     if (status === "Alive") {
 
-        characterStatus.classList.add(
-            "alive"
-        );
-
-        characterStatus.textContent =
-            "● Alive";
+        $characterStatus
+            .addClass("alive")
+            .text("● Alive");
 
     }
 
     else if (status === "Dead") {
 
-        characterStatus.classList.add(
-            "dead"
-        );
-
-        characterStatus.textContent =
-            "● Dead";
+        $characterStatus
+            .addClass("dead")
+            .text("● Dead");
 
     }
 
     else {
 
-        characterStatus.textContent =
-            "● Unknown";
+        $characterStatus.text(
+            "● Unknown"
+        );
 
     }
 
@@ -283,43 +330,101 @@ function updateStatus(status) {
 // SUCHFUNKTION
 // ========================================
 
-searchInput.addEventListener(
-    "input",
-    () => {
+$searchInput.on("input", function () {
 
-        const search =
-            searchInput.value.trim();
+    const search =
+        $(this).val().trim();
 
 
-        // Vorherigen Timer löschen
-        clearTimeout(
-            searchTimeout
+    // Vorherigen Timer löschen
+    clearTimeout(
+        searchTimeout
+    );
+
+
+    // Suchfeld leer
+    if (search === "") {
+
+        renderCharacterList(
+            characters
         );
 
+        return;
 
-        // Suchfeld leer
-        if (search === "") {
+    }
 
-            renderCharacterList(
-                characters
+
+    // Kleine Verzögerung,
+    // damit nicht bei jedem Tastendruck
+    // sofort eine API-Anfrage kommt
+    searchTimeout =
+        setTimeout(
+            () => searchCharactersFromAPI(search),
+            300
+        );
+
+});
+
+
+// ========================================
+// jQuery UI Autocomplete
+//
+// Ergänzt die bestehende Live-Suche um
+// Vorschläge während der Eingabe. source
+// ist hier eine Funktion, die selbst eine
+// AJAX-Anfrage stellt statt eines
+// statischen Arrays.
+// ========================================
+
+$searchInput.autocomplete({
+
+    minLength: 2,
+
+    source: async function (request, response) {
+
+        try {
+
+            const results =
+                await searchCharacters(request.term);
+
+
+            response(
+                results.slice(0, 8).map(character => ({
+                    label: `${character.name} (${character.species})`,
+                    value: character.name,
+                    character: character
+                }))
             );
 
-            return;
+
+        } catch (error) {
+
+            response([]);
 
         }
 
+    },
 
-        // Kleine Verzögerung,
-        // damit nicht bei jedem Tastendruck
-        // sofort eine API-Anfrage kommt
-        searchTimeout =
-            setTimeout(
-                () => searchCharactersFromAPI(search),
-                300
-            );
+    select: function (event, ui) {
+
+        renderCharacterList([ui.item.character]);
+
+        showCharacter(ui.item.character);
+
+        return false;
 
     }
-);
+
+});
+
+
+// ========================================
+// jQuery UI Tooltip
+// ========================================
+
+$(document).tooltip({
+    items: "img[title], [title]"
+});
 
 
 // ========================================
@@ -332,11 +437,11 @@ async function searchCharactersFromAPI(
 
     try {
 
-        characterList.innerHTML = `
+        $characterList.html(`
             <div class="loading">
                 Suche läuft...
             </div>
-        `;
+        `);
 
 
         const results =
@@ -358,11 +463,11 @@ async function searchCharactersFromAPI(
         );
 
 
-        characterList.innerHTML = `
+        $characterList.html(`
             <div class="error">
                 Suche konnte nicht durchgeführt werden.
             </div>
-        `;
+        `);
 
     }
 
@@ -370,7 +475,227 @@ async function searchCharactersFromAPI(
 
 
 // ========================================
-// START
+// Alle Charaktere laden
+//
+// Die API liefert Seiten à 20 Charaktere
+// (info.pages). Seite 1 wird geladen, um
+// die Gesamtzahl der Seiten zu erfahren,
+// danach werden alle übrigen Seiten
+// parallel nachgeladen.
 // ========================================
 
-init();
+async function getAllCharacters() {
+
+    const firstPage =
+        await getCharacters(1);
+
+    const totalPages =
+        firstPage.info.pages;
+
+    let allResults =
+        firstPage.results.slice();
+
+
+    if (totalPages <= 1) {
+
+        return allResults;
+
+    }
+
+
+    const pageRequests = [];
+
+
+    for (let page = 2; page <= totalPages; page++) {
+
+        pageRequests.push(
+            getCharacters(page)
+        );
+
+    }
+
+
+    // jQuerys jqXHR-Objekte sind
+    // Promise-kompatibel, daher
+    // funktioniert Promise.all() hier
+    // genauso wie mit fetch()
+
+    const pages =
+        await Promise.all(pageRequests);
+
+
+    pages.forEach(pageData => {
+
+        allResults =
+            allResults.concat(pageData.results);
+
+    });
+
+
+    return allResults;
+
+}
+
+
+// ========================================
+// Spezien-Übersicht laden
+//
+// Lädt einmalig ALLE Charaktere der API
+// und zeichnet danach das Radar-Chart.
+// Läuft unabhängig von der Sidebar-Liste
+// bzw. der Suche.
+// ========================================
+
+async function loadSpeciesOverview() {
+
+    try {
+
+        const allCharacters =
+            await getAllCharacters();
+
+
+        renderSpeciesChart(allCharacters);
+
+
+        $("#chart-status").text(
+            `${allCharacters.length} characters on file`
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Fehler beim Laden der Spezien-Übersicht:",
+            error
+        );
+
+        $("#chart-status").text(
+            "Census unavailable."
+        );
+
+    }
+
+}
+
+
+// ========================================
+// Spinnennetzdiagramm der Spezien
+//
+// Zählt, wie oft jede Spezies in der
+// übergebenen Liste vorkommt, und
+// zeichnet ein Radar-Chart via Chart.js.
+// ========================================
+
+function getSpeciesDistribution(list) {
+
+    const counts = {};
+
+
+    list.forEach(character => {
+
+        const species =
+            character.species || "Unknown";
+
+        counts[species] =
+            (counts[species] || 0) + 1;
+
+    });
+
+
+    return counts;
+
+}
+
+
+function renderSpeciesChart(list) {
+
+    const counts =
+        getSpeciesDistribution(list);
+
+    const labels =
+        Object.keys(counts);
+
+    const data =
+        Object.values(counts);
+
+
+    // Chart nur einmal erzeugen, danach
+    // nur noch die Daten aktualisieren
+
+    if (speciesChart) {
+
+        speciesChart.data.labels = labels;
+
+        speciesChart.data.datasets[0].data = data;
+
+        speciesChart.update();
+
+        return;
+
+    }
+
+
+    speciesChart = new Chart(speciesChartCanvas, {
+
+        type: "radar",
+
+        data: {
+
+            labels: labels,
+
+            datasets: [{
+
+                label: "Anzahl Charaktere",
+
+                data: data,
+
+                backgroundColor: "rgba(66, 184, 131, 0.2)",
+
+                borderColor: "#42b883",
+
+                pointBackgroundColor: "#42b883"
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            scales: {
+
+                r: {
+
+                    beginAtZero: true,
+
+                    ticks: {
+                        stepSize: 1
+                    }
+
+                }
+
+            }
+
+        }
+
+    });
+
+}
+
+
+// ========================================
+// START
+//
+// $(function(){...}) ist die
+// Kurzschreibweise für
+// $(document).ready(function(){...})
+// ========================================
+
+$(function () {
+
+    init();
+
+    loadSpeciesOverview();
+
+});
