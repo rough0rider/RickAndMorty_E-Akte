@@ -517,6 +517,17 @@ body::after {
 }
 
 
+#species-chart {
+    background-color: #f4f8fb;
+
+    border: 1px solid var(--border);
+
+    border-radius: 2px;
+
+    padding: 10px;
+}
+
+
 /* =========================
    Kopf der Akte
 ========================= */
@@ -949,6 +960,8 @@ body::after {
 ========================= */
 
 .wanted-ticker {
+    position: relative;
+
     flex: 1;
 
     overflow: hidden;
@@ -964,6 +977,14 @@ body::after {
 ========================= */
 
 .wanted-content {
+    position: absolute;
+
+    top: 50%;
+
+    left: 100%;
+
+    transform: translateY(-50%);
+
     display: flex;
 
     align-items: center;
@@ -973,7 +994,7 @@ body::after {
     white-space: nowrap;
 
     animation:
-        wanted-scroll 18s linear infinite;
+        wanted-scroll 50s linear infinite;
 }
 
 
@@ -1042,11 +1063,11 @@ body::after {
 @keyframes wanted-scroll {
 
     from {
-        transform: translateX(100%);
+        left: 100%;
     }
 
     to {
-        transform: translateX(-100%);
+        left: -100%;
     }
 
 }

@@ -367,58 +367,6 @@ $searchInput.on("input", function () {
 
 
 // ========================================
-// jQuery UI Autocomplete
-//
-// Ergänzt die bestehende Live-Suche um
-// Vorschläge während der Eingabe. source
-// ist hier eine Funktion, die selbst eine
-// AJAX-Anfrage stellt statt eines
-// statischen Arrays.
-// ========================================
-
-$searchInput.autocomplete({
-
-    minLength: 2,
-
-    source: async function (request, response) {
-
-        try {
-
-            const results =
-                await searchCharacters(request.term);
-
-
-            response(
-                results.slice(0, 8).map(character => ({
-                    label: `${character.name} (${character.species})`,
-                    value: character.name,
-                    character: character
-                }))
-            );
-
-
-        } catch (error) {
-
-            response([]);
-
-        }
-
-    },
-
-    select: function (event, ui) {
-
-        renderCharacterList([ui.item.character]);
-
-        showCharacter(ui.item.character);
-
-        return false;
-
-    }
-
-});
-
-
-// ========================================
 // jQuery UI Tooltip
 // ========================================
 
@@ -663,6 +611,8 @@ function renderSpeciesChart(list) {
 
             responsive: true,
 
+            color: "#1f2937",
+
             scales: {
 
                 r: {
@@ -670,9 +620,36 @@ function renderSpeciesChart(list) {
                     beginAtZero: true,
 
                     ticks: {
-                        stepSize: 1
+                        stepSize: 1,
+                        color: "#4b5563",
+                        backdropColor: "transparent"
+                    },
+
+                    grid: {
+                        color: "#d9dee5"
+                    },
+
+                    angleLines: {
+                        color: "#d9dee5"
+                    },
+
+                    pointLabels: {
+                        color: "#1f2937",
+                        font: {
+                            size: 11
+                        }
                     }
 
+                }
+
+            },
+
+            plugins: {
+
+                legend: {
+                    labels: {
+                        color: "#1f2937"
+                    }
                 }
 
             }
