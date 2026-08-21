@@ -1,6 +1,6 @@
 # 🛸 Time Police E-Files (RickAndMorty_E-Akte)
 
-![Example Image](time)
+![Example Image](timecop_introducing.jpeg)
 
 > A 4th Dimensional Time Police case-file terminal for browsing the **Rick and Morty** universe — built as a front-end training project (HTML5, CSS3, JavaScript, jQuery, jQuery UI, Chart.js).
 
