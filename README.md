@@ -1,5 +1,7 @@
 # 🛸 Time Police E-Files (RickAndMorty_E-Akte)
 
+![Example Image](time)
+
 > A 4th Dimensional Time Police case-file terminal for browsing the **Rick and Morty** universe — built as a front-end training project (HTML5, CSS3, JavaScript, jQuery, jQuery UI, Chart.js).
 
 Personnel files on every known interdimensional being, rendered as a retro-futuristic HUD terminal: dark void background, neon cyan/magenta accents, scanlines, and a live "MOST WANTED" ticker.
