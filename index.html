@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
-
+    <html lang="en">
     <head>
         <meta charset="UTF-8">
+        <!-- Skalierung für mobile Geräte -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Einbinden des lokalen Style-Sheets -->
         <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.css">
+        <!-- Google Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+        <!-- Einbinden der Chart.js für Diagramme-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.1/chart.umd.min.js"></script>
+        <!-- Website-Titel-->
         <title>Time Police E-Files</title>
     </head>
 <body>
     <div class="app">
-        <!-- =========================
-             SIDEBAR
-        ========================== -->
+        <!--                   LINKE SIDEBAR                -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-header-text">
@@ -30,381 +32,194 @@
                         title="4th Dimensional Time Police – founded to protect the timeline">
                 </div>
             </div>
-            <!-- Suche -->
-
+            <!--                    Suche                   -->
             <div class="search-container">
-
+                <!--    Dropdown-Menü für Suchfilter        -->
                 <select id="search-field">
-
                     <option value="name" selected>Name</option>
                     <option value="id">File-Nr.</option>
                     <option value="species">Species</option>
                     <option value="gender">Sex</option>
                     <option value="origin">Origin</option>
                     <option value="location">Last Seen</option>
-
                 </select>
-
-
-                <input
-                    type="text"
-                    id="search"
-                    placeholder="Search..."
-                >
-
+                <!--                Suchfeld                -->
+                <input type="text" id="search" placeholder="Search...">
             </div>
-
-
-            <!--
-                Die Charaktere werden hier
-                von JavaScript eingefügt.
-            -->
-
-            <div
-                class="character-list"
-                id="character-list">
+            <!-- Charaktere werden hier von JavaScript (app.js, api.js) eingefügt -->
+            <div class="character-list" id="character-list">
             </div>
-
         </aside>
-
-
-        <!-- =========================
-             RECHTE SEITE
-        ========================== -->
-
+        <!--                MITTLERE SEITE                  -->
         <main class="content">
-
-
-            <!-- Kopf der Akte -->
-
+            <!--            Kopfbereich der Akte            -->
             <header class="content-header">
-
                 <div>
-
                     <span class="document-label">
                         Electronic File
                     </span>
-
                     <h2>
                         Personnel File
                     </h2>
-
                 </div>
-
-
-                <span
-                    class="file-number"
-                    id="file-number">
-
+                <!--            Aktennummerierung           -->
+                <span class="file-number" id="file-number">
                     FILE #0000
-
                 </span>
-
             </header>
-
-
-            <!-- =========================
-                 E-AKTE
-            ========================== -->
-
+            <!--                Inhalt der E-Akte           -->
             <section class="file">
-
-
-                <!-- Profil -->
-
                 <div class="profile">
-
-                    <img
-                        id="character-image"
-                        alt="Character"
-                    >
-
-
+                    <img id="character-image" alt="Character">
                     <div class="profile-info">
-
                         <span class="label">
                             NAME
                         </span>
-
                         <h3 id="character-name">
                             -
                         </h3>
-
-
-                        <span
-                            class="status"
-                            id="character-status">
-
+                        <span class="status" id="character-status">
                             ● Unknown
-
                         </span>
-
                     </div>
-
                 </div>
-
-
-                <!-- Stammdaten -->
-
+                <!-- Stammdaten mit jeweiligen Informationen -->
                 <div class="section">
-
                     <h4>
                         Master Data
                     </h4>
-
-
                     <div class="data-grid">
-
-
-                        <!-- Species -->
-
+                        <!--            Species             -->
                         <div class="data-item">
-
                             <span class="label">
                                 Species
                             </span>
-
                             <strong id="character-species">
                                 -
                             </strong>
-
                         </div>
-
-
-                        <!-- Sex -->
-
+                        <!--            Sex                 -->
                         <div class="data-item">
-
                             <span class="label">
                                 Sex
                             </span>
-
                             <strong id="character-gender">
                                 -
                             </strong>
-
                         </div>
-
-
-                        <!-- Origin -->
-
+                        <!--            Origin              -->
                         <div class="data-item">
-
                             <span class="label">
                                 Origin
                             </span>
-
                             <strong id="character-origin">
                                 -
                             </strong>
-
                         </div>
-
-
-                        <!-- Location -->
-
+                        <!--            Location              -->
                         <div class="data-item">
-
                             <span class="label">
                                 Last Seen
                             </span>
-
                             <strong id="character-location">
                                 -
                             </strong>
-
                         </div>
-
-
                     </div>
-
                 </div>
-
             </section>
-
         </main>
-
-
-        <!-- =========================
-             DRITTE SPALTE
-        ========================== -->
-
+        <!--                    RECHTE SIDEBAR              -->
         <aside class="info-panel">
-
-            <!-- Externe Links -->
-
+            <!--            Links zu anderen Webseiten      -->
             <div class="info-section">
-
                 <h4>
                     References
                 </h4>
-
-
+                <!-- Auflistung der Webseiten als ungeordnete Liste -->
                 <ul class="link-list">
-
                     <li>
-                        <a
-                            href="https://rickandmortyapi.com/documentation"
-                            target="_blank"
-                            rel="noopener noreferrer">
-
+                        <a href="https://rickandmortyapi.com/documentation" target="_blank" rel="noopener noreferrer">
                             Rick and Morty API Docs
-
                         </a>
                     </li>
-
                     <li>
-                        <a
-                            href="https://github.com/afuh/rick-and-morty-api"
-                            target="_blank"
-                            rel="noopener noreferrer">
-
+                        <a href="https://github.com/afuh/rick-and-morty-api" target="_blank" rel="noopener noreferrer">
                             Rick and Morty API (GitHub)
-
                         </a>
                     </li>
-
                     <li>
-                        <!-- TODO: durch den eigenen Repo-Link ersetzen -->
-                        <a
-                            href="#"
-                            target="_blank"
-                            rel="noopener noreferrer">
-
+                        <a href="https://github.com/rough0rider/RickAndMorty_E-Akte" target="_blank" rel="noopener noreferrer">
                             Time Police E-Files (GitHub)
-
                         </a>
                     </li>
-
                 </ul>
-
             </div>
-
-
-            <!-- Spinnennetzdiagramm der Spezien -->
-
+            <!-- Spinnennetzdiagramm der Spezien            -->
             <div class="info-section">
-
                 <h4>
                     Species Overview
                 </h4>
-
-
                 <p class="chart-status" id="chart-status">
                     Loading full census...
                 </p>
-
-
                 <canvas class="stat-chart" id="species-chart">
                 </canvas>
-
             </div>
-
-
-            <!-- Spinnennetzdiagramm nach Sex -->
-
+            <!-- Spinnennetzdiagramm nach Geschlecht        -->
             <div class="info-section">
-
                 <h4>
                     Sex Overview
                 </h4>
-
-
                 <canvas class="stat-chart" id="gender-chart">
                 </canvas>
-
             </div>
-
-
-            <!-- Spinnennetzdiagramm nach Origin -->
-
+            <!-- Spinnennetzdiagramm nach Herkunft          -->
             <div class="info-section">
-
                 <h4>
                     Origin Overview
                 </h4>
-
-
                 <canvas class="stat-chart" id="origin-chart">
                 </canvas>
-
             </div>
-
-
-            <!-- Spinnennetzdiagramm nach Last Seen -->
-
+            <!-- Spinnennetzdiagramm nach Letzter Standort  -->
             <div class="info-section">
-
                 <h4>
                     Last Seen Overview
                 </h4>
-
-
                 <canvas class="stat-chart" id="location-chart">
                 </canvas>
-
             </div>
-
         </aside>
-
     </div>
-
-
-    <!-- =========================
-         MOST WANTED BANNER
-    ========================== -->
-
+    <!--                MOST WANTED BANNER                  -->
     <div class="wanted-banner">
-
         <div class="wanted-label">
             MOST WANTED
         </div>
-
-
         <div class="wanted-ticker">
-
+            <!-- Inhalt des Banners mit manuellen Einträgen -->
             <div class="wanted-content">
-
-                <img
-                    src="https://rickandmortyapi.com/api/character/avatar/11.jpeg"
-                    alt="Albert Einstein"
-                >
-
+                <img src="https://rickandmortyapi.com/api/character/avatar/11.jpeg" alt="Albert Einstein">
                 <strong>
                     ALBERT EINSTEIN
                 </strong>
-
                 <span>
                     MOST WANTED - FOUND
                 </span>
-
                 <span>
                     STATUS: LOCATED
                 </span>
-
                 <span>
                     FILE #1879
                 </span>
-
             </div>
-
         </div>
-
     </div>
-
-
-    <!-- =========================
-         JAVASCRIPT
-
-         jQuery + jQuery UI per CDN
-    ========================== -->
-
+    <!--        JAVASCRIPT- UND jQuery-EINBINDUNG           -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
-
     <script src="js/api.js"></script>
     <script src="js/app.js"></script>
-
 </body>
-
 </html>
