@@ -34,6 +34,18 @@
 
             <div class="search-container">
 
+                <select id="search-field">
+
+                    <option value="name" selected>Name</option>
+                    <option value="id">File-Nr.</option>
+                    <option value="species">Species</option>
+                    <option value="gender">Sex</option>
+                    <option value="origin">Origin</option>
+                    <option value="location">Last Seen</option>
+
+                </select>
+
+
                 <input
                     type="text"
                     id="search"
@@ -283,7 +295,52 @@
                 </p>
 
 
-                <canvas id="species-chart">
+                <canvas class="stat-chart" id="species-chart">
+                </canvas>
+
+            </div>
+
+
+            <!-- Spinnennetzdiagramm nach Sex -->
+
+            <div class="info-section">
+
+                <h4>
+                    Sex Overview
+                </h4>
+
+
+                <canvas class="stat-chart" id="gender-chart">
+                </canvas>
+
+            </div>
+
+
+            <!-- Spinnennetzdiagramm nach Origin -->
+
+            <div class="info-section">
+
+                <h4>
+                    Origin Overview
+                </h4>
+
+
+                <canvas class="stat-chart" id="origin-chart">
+                </canvas>
+
+            </div>
+
+
+            <!-- Spinnennetzdiagramm nach Last Seen -->
+
+            <div class="info-section">
+
+                <h4>
+                    Last Seen Overview
+                </h4>
+
+
+                <canvas class="stat-chart" id="location-chart">
                 </canvas>
 
             </div>

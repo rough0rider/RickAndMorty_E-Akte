@@ -8,6 +8,9 @@ const $characterList =
 const $searchInput =
     $("#search");
 
+const $searchField =
+    $("#search-field");
+
 const $characterImage =
     $("#character-image");
 
@@ -35,6 +38,15 @@ const $fileNumber =
 const speciesChartCanvas =
     document.getElementById("species-chart");
 
+const genderChartCanvas =
+    document.getElementById("gender-chart");
+
+const originChartCanvas =
+    document.getElementById("origin-chart");
+
+const locationChartCanvas =
+    document.getElementById("location-chart");
+
 
 // ========================================
 // Daten
@@ -46,7 +58,7 @@ let currentList = [];
 
 let searchTimeout;
 
-let speciesChart = null;
+let fullCharacterIndex = [];
 
 
 // ========================================
@@ -328,12 +340,26 @@ function updateStatus(status) {
 
 // ========================================
 // SUCHFUNKTION
+//
+// "Name" läuft wie bisher über die API.
+// Alle anderen Felder filtern lokal gegen
+// den Gesamtbestand (fullCharacterIndex),
+// da die API Origin/Last Seen ohnehin
+// nicht als Suchparameter unterstützt.
 // ========================================
 
-$searchInput.on("input", function () {
+$searchInput.on("input", performSearch);
 
-    const search =
-        $(this).val().trim();
+$searchField.on("change", performSearch);
+
+
+function performSearch() {
+
+    const term =
+        $searchInput.val().trim();
+
+    const field =
+        $searchField.val();
 
 
     // Vorherigen Timer löschen
@@ -343,7 +369,7 @@ $searchInput.on("input", function () {
 
 
     // Suchfeld leer
-    if (search === "") {
+    if (term === "") {
 
         renderCharacterList(
             characters
@@ -354,16 +380,89 @@ $searchInput.on("input", function () {
     }
 
 
-    // Kleine Verzögerung,
-    // damit nicht bei jedem Tastendruck
-    // sofort eine API-Anfrage kommt
+    if (field === "name") {
+
+        // Kleine Verzögerung,
+        // damit nicht bei jedem Tastendruck
+        // sofort eine API-Anfrage kommt
+        searchTimeout =
+            setTimeout(
+                () => searchCharactersFromAPI(term),
+                300
+            );
+
+        return;
+
+    }
+
+
     searchTimeout =
         setTimeout(
-            () => searchCharactersFromAPI(search),
-            300
+            () => filterByField(field, term),
+            150
         );
 
-});
+}
+
+
+// ========================================
+// Lokale Filterung
+//
+// Durchsucht den bereits geladenen
+// Gesamtbestand nach File-Nr., Species,
+// Sex, Origin oder Last Seen.
+// ========================================
+
+function filterByField(field, term) {
+
+    if (fullCharacterIndex.length === 0) {
+
+        $characterList.html(`
+            <div class="loading">
+                Gesamtbestand wird noch geladen...
+            </div>
+        `);
+
+        return;
+
+    }
+
+
+    const lowerTerm =
+        term.toLowerCase();
+
+
+    const results =
+        fullCharacterIndex.filter(character => {
+
+            switch (field) {
+
+                case "id":
+                    return String(character.id).includes(lowerTerm);
+
+                case "species":
+                    return character.species.toLowerCase().includes(lowerTerm);
+
+                case "gender":
+                    return character.gender.toLowerCase().includes(lowerTerm);
+
+                case "origin":
+                    return character.origin.name.toLowerCase().includes(lowerTerm);
+
+                case "location":
+                    return character.location.name.toLowerCase().includes(lowerTerm);
+
+                default:
+                    return false;
+
+            }
+
+        });
+
+
+    renderCharacterList(results);
+
+}
 
 
 // ========================================
@@ -486,23 +585,61 @@ async function getAllCharacters() {
 
 
 // ========================================
-// Spezien-Übersicht laden
+// Übersichts-Diagramme laden
 //
-// Lädt einmalig ALLE Charaktere der API
-// und zeichnet danach das Radar-Chart.
-// Läuft unabhängig von der Sidebar-Liste
-// bzw. der Suche.
+// Lädt einmalig ALLE Charaktere der API,
+// speichert sie für die lokale Suche
+// (fullCharacterIndex) und zeichnet
+// danach vier Radar-Charts (Species, Sex,
+// Origin, Last Seen). Läuft unabhängig
+// von der Sidebar-Liste bzw. der Suche.
 // ========================================
 
-async function loadSpeciesOverview() {
+async function loadOverviewCharts() {
 
     try {
 
         const allCharacters =
             await getAllCharacters();
 
+        fullCharacterIndex =
+            allCharacters;
 
-        renderSpeciesChart(allCharacters);
+
+        const speciesDist =
+            getDistribution(allCharacters, c => c.species);
+
+        renderSpeciesChart(
+            speciesDist.labels,
+            speciesDist.data
+        );
+
+
+        const genderDist =
+            getDistribution(allCharacters, c => c.gender);
+
+        renderGenderChart(
+            genderDist.labels,
+            genderDist.data
+        );
+
+
+        const originDist =
+            getDistribution(allCharacters, c => c.origin.name);
+
+        renderOriginChart(
+            originDist.labels,
+            originDist.data
+        );
+
+
+        const locationDist =
+            getDistribution(allCharacters, c => c.location.name);
+
+        renderLocationChart(
+            locationDist.labels,
+            locationDist.data
+        );
 
 
         $("#chart-status").text(
@@ -513,7 +650,7 @@ async function loadSpeciesOverview() {
     } catch (error) {
 
         console.error(
-            "Fehler beim Laden der Spezien-Übersicht:",
+            "Fehler beim Laden der Übersichts-Diagramme:",
             error
         );
 
@@ -527,138 +664,171 @@ async function loadSpeciesOverview() {
 
 
 // ========================================
-// Spinnennetzdiagramm der Spezien
+// Verteilung berechnen
 //
-// Zählt, wie oft jede Spezies in der
-// übergebenen Liste vorkommt, und
-// zeichnet ein Radar-Chart via Chart.js.
+// Zählt, wie oft jeder Wert (via keyFn)
+// in der Liste vorkommt, sortiert absteigend
+// nach Häufigkeit und begrenzt auf die
+// Top-Einträge - sonst wird das Diagramm
+// bei Feldern mit vielen unterschiedlichen
+// Werten (z. B. Origin) unleserlich.
 // ========================================
 
-function getSpeciesDistribution(list) {
+function getDistribution(list, keyFn, limit = 10) {
 
     const counts = {};
 
 
     list.forEach(character => {
 
-        const species =
-            character.species || "Unknown";
+        const key =
+            keyFn(character) || "Unknown";
 
-        counts[species] =
-            (counts[species] || 0) + 1;
+        counts[key] =
+            (counts[key] || 0) + 1;
 
     });
 
 
-    return counts;
+    const sorted =
+        Object.entries(counts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, limit);
+
+
+    return {
+
+        labels: sorted.map(entry => entry[0]),
+
+        data: sorted.map(entry => entry[1])
+
+    };
 
 }
 
 
-function renderSpeciesChart(list) {
+// ========================================
+// Radar-Chart-Fabrik
+//
+// Erzeugt für ein Canvas-Element eine
+// Render-Funktion, die das Chart beim
+// ersten Aufruf erstellt und danach nur
+// noch die Daten aktualisiert. So teilen
+// sich alle vier Diagramme dieselbe
+// Chart.js-Konfiguration.
+// ========================================
 
-    const counts =
-        getSpeciesDistribution(list);
+function createRadarRenderer(canvasElement, datasetLabel) {
 
-    const labels =
-        Object.keys(counts);
-
-    const data =
-        Object.values(counts);
-
-
-    // Chart nur einmal erzeugen, danach
-    // nur noch die Daten aktualisieren
-
-    if (speciesChart) {
-
-        speciesChart.data.labels = labels;
-
-        speciesChart.data.datasets[0].data = data;
-
-        speciesChart.update();
-
-        return;
-
-    }
+    let chartInstance = null;
 
 
-    speciesChart = new Chart(speciesChartCanvas, {
+    return function (labels, data) {
 
-        type: "radar",
+        if (chartInstance) {
 
-        data: {
+            chartInstance.data.labels = labels;
 
-            labels: labels,
+            chartInstance.data.datasets[0].data = data;
 
-            datasets: [{
+            chartInstance.update();
 
-                label: "Anzahl Charaktere",
+            return;
 
-                data: data,
+        }
 
-                backgroundColor: "rgba(66, 184, 131, 0.2)",
 
-                borderColor: "#42b883",
+        chartInstance = new Chart(canvasElement, {
 
-                pointBackgroundColor: "#42b883"
+            type: "radar",
 
-            }]
+            data: {
 
-        },
+                labels: labels,
 
-        options: {
+                datasets: [{
 
-            responsive: true,
+                    label: datasetLabel,
 
-            color: "#1f2937",
+                    data: data,
 
-            scales: {
+                    backgroundColor: "rgba(66, 184, 131, 0.2)",
 
-                r: {
+                    borderColor: "#42b883",
 
-                    beginAtZero: true,
+                    pointBackgroundColor: "#42b883"
 
-                    ticks: {
-                        stepSize: 1,
-                        color: "#4b5563",
-                        backdropColor: "transparent"
-                    },
+                }]
 
-                    grid: {
-                        color: "#d9dee5"
-                    },
+            },
 
-                    angleLines: {
-                        color: "#d9dee5"
-                    },
+            options: {
 
-                    pointLabels: {
-                        color: "#1f2937",
-                        font: {
-                            size: 11
+                responsive: true,
+
+                color: "#1f2937",
+
+                scales: {
+
+                    r: {
+
+                        beginAtZero: true,
+
+                        ticks: {
+                            stepSize: 1,
+                            color: "#4b5563",
+                            backdropColor: "transparent"
+                        },
+
+                        grid: {
+                            color: "#d9dee5"
+                        },
+
+                        angleLines: {
+                            color: "#d9dee5"
+                        },
+
+                        pointLabels: {
+                            color: "#1f2937",
+                            font: {
+                                size: 11
+                            }
+                        }
+
+                    }
+
+                },
+
+                plugins: {
+
+                    legend: {
+                        labels: {
+                            color: "#1f2937"
                         }
                     }
 
                 }
 
-            },
-
-            plugins: {
-
-                legend: {
-                    labels: {
-                        color: "#1f2937"
-                    }
-                }
-
             }
 
-        }
+        });
 
-    });
+    };
 
 }
+
+
+const renderSpeciesChart =
+    createRadarRenderer(speciesChartCanvas, "Anzahl Charaktere");
+
+const renderGenderChart =
+    createRadarRenderer(genderChartCanvas, "Anzahl Charaktere");
+
+const renderOriginChart =
+    createRadarRenderer(originChartCanvas, "Anzahl Charaktere");
+
+const renderLocationChart =
+    createRadarRenderer(locationChartCanvas, "Anzahl Charaktere");
 
 
 // ========================================
@@ -673,6 +843,6 @@ $(function () {
 
     init();
 
-    loadSpeciesOverview();
+    loadOverviewCharts();
 
 });

@@ -244,7 +244,79 @@ body::after {
 .search-container {
     padding: 20px;
 
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
     background-color: var(--panel);
+}
+
+
+.search-container select {
+    width: 100%;
+
+    padding: 10px 34px 10px 12px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 2px;
+
+    background-color: var(--void);
+
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='%2300f0ff' d='M6 8 0 0h12z'/%3E%3C/svg%3E");
+
+    background-repeat: no-repeat;
+
+    background-position: right 12px center;
+
+    background-size: 10px 7px;
+
+    appearance: none;
+
+    -webkit-appearance: none;
+
+    -moz-appearance: none;
+
+    color: var(--text-dim);
+
+    outline: none;
+
+    font-family: var(--font-mono);
+
+    font-size: 11px;
+
+    letter-spacing: 1.5px;
+
+    text-transform: uppercase;
+
+    cursor: pointer;
+
+    transition: border-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+
+.search-container select:hover {
+    border-color: var(--cyan);
+
+    color: var(--cyan);
+}
+
+
+.search-container select:focus {
+    border-color: var(--cyan);
+
+    color: var(--cyan);
+
+    box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.15), 0 0 12px rgba(0, 240, 255, 0.35);
+}
+
+
+.search-container select option {
+    background-color: var(--panel);
+
+    color: var(--text);
 }
 
 
@@ -517,7 +589,13 @@ body::after {
 }
 
 
-#species-chart {
+.stat-chart {
+    display: block;
+
+    width: 100%;
+
+    min-height: 220px;
+
     background-color: #f4f8fb;
 
     border: 1px solid var(--border);
@@ -525,6 +603,8 @@ body::after {
     border-radius: 2px;
 
     padding: 10px;
+
+    margin-bottom: 20px;
 }
 
 
@@ -994,7 +1074,7 @@ body::after {
     white-space: nowrap;
 
     animation:
-        wanted-scroll 50s linear infinite;
+        wanted-scroll 18s linear infinite;
 }
 
 
